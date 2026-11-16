@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes de apoyo | PetMatch Mini</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#contenido-principal">
+        Saltar al contenido principal
+    </a>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main id="contenido-principal">
+
+        <h1>Solicitudes de apoyo</h1>
+
+        <h2>
+            Mascota:
+            <span th:text="${pet.name}">Nombre</span>
+        </h2>
+
+        <p th:if="${successMessage}" th:text="${successMessage}"></p>
+
+        <a th:href="@{/pets/{petId}/requests/new(petId=${pet.id})}">
+            Registrar nueva solicitud
+        </a>
+
+        <p th:if="${#lists.isEmpty(requests)}">
+            Esta mascota todavía no tiene solicitudes de apoyo.
+        </p>
+
+        <ul th:if="${not #lists.isEmpty(requests)}">
+
+            <li th:each="request : ${requests}">
+
+                <h2>
+                    <span th:text="${request.type.label}">Tipo de apoyo</span>
+                </h2>
+
+                <p>
+                    Descripción:
+                    <span th:text="${request.description}">Descripción</span>
+                </p>
+
+                <p>
+                    Estado:
+                    <strong th:text="${request.status.label}">Abierta</strong>
+                </p>
+
+                <div th:if="${request.status.name() == 'OPEN'}">
+
+                    <form th:action="@{/pets/{petId}/requests/{requestId}/complete(
+                              petId=${pet.id}, requestId=${request.id})}"
+                          method="post">
+
+                        <button type="submit">Completar</button>
+
+                    </form>
+
+                    <form th:action="@{/pets/{petId}/requests/{requestId}/cancel(
+                              petId=${pet.id}, requestId=${request.id})}"
+                          method="post">
+
+                        <button type="submit">Cancelar</button>
+
+                    </form>
+
+                    <a th:href="@{/pets/{petId}/requests/{requestId}/replace(
+                               petId=${pet.id}, requestId=${request.id})}">
+                        Reemplazar solicitud
+                    </a>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+        <p>
+            <a th:href="@{/pets/{id}(id=${pet.id})}">
+                Volver a los detalles de la mascota
+            </a>
+        </p>
+
+    </main>
+
+</body>
+</html>

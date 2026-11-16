@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de apoyo | PetMatch Mini</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#contenido-principal">
+        Saltar al contenido principal
+    </a>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main id="contenido-principal">
+
+        <h1 th:text="${formTitle}">Nueva solicitud de apoyo</h1>
+
+        <h2>
+            Mascota:
+            <span th:text="${pet.name}">Nombre</span>
+        </h2>
+
+        <form th:action="${formAction}"
+              th:object="${supportRequestForm}"
+              method="post">
+
+            <div>
+                <label for="type">Tipo de apoyo:</label>
+
+                <select id="type" th:field="*{type}">
+                    <option value="">Selecciona una opción</option>
+
+                    <option th:each="supportType : ${supportTypes}"
+                            th:value="${supportType}"
+                            th:text="${supportType.label}">
+                    </option>
+                </select>
+
+                <p th:if="${#fields.hasErrors('type')}"
+                   th:errors="*{type}"></p>
+            </div>
+
+            <div>
+                <label for="description">Descripción:</label>
+
+                <textarea id="description"
+                          th:field="*{description}"
+                          rows="5"
+                          maxlength="500"
+                          placeholder="Describe el apoyo que necesita la mascota">
+                </textarea>
+
+                <p th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"></p>
+            </div>
+
+            <p th:if="${#fields.hasGlobalErrors()}"
+               th:each="error : ${#fields.globalErrors()}"
+               th:text="${error}">
+            </p>
+
+            <button type="submit" th:text="${submitLabel}">
+                Registrar solicitud
+            </button>
+
+            <a th:href="@{/pets/{petId}/requests(petId=${pet.id})}">
+                Cancelar
+            </a>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

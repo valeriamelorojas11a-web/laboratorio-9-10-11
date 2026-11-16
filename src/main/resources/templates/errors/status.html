@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | PetMatch Mini</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main id="contenido-principal">
+
+        <h1 th:text="${statusCode}">404</h1>
+
+        <h2 th:text="${errorTitle}">
+            Se produjo un error
+        </h2>
+
+        <p th:text="${errorMessage}">
+            No fue posible completar la solicitud.
+        </p>
+
+        <a th:href="@{/}">
+            Volver al inicio
+        </a>
+
+        <a th:href="@{/pets}">
+            Ir al catalogo de mascotas
+        </a>
+
+    </main>
+
+</body>
+</html>
