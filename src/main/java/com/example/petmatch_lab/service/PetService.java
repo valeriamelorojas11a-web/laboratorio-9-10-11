@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.petmatch_lab.form.PetForm;
 import com.example.petmatch_lab.exception.BusinessRuleException;
 import com.example.petmatch_lab.model.Pet;
 import com.example.petmatch_lab.repository.PetRepository;
@@ -36,6 +37,33 @@ public class PetService {
         return petRepository.save(pet);
     }
 
+   @Transactional
+    public Pet create(PetForm form) {
+        Pet pet = new Pet();
+        pet.setName(form.getName() == null ? null : form.getName().trim());
+        pet.setSpecies(form.getSpecies() == null ? null : form.getSpecies().trim());
+        pet.setAge(form.getAge());
+        String description = (form.getDescription() == null || form.getDescription().isBlank())
+                ? null
+                : form.getDescription().trim();
+        pet.setDescription(description);
+        return petRepository.save(pet);
+    }
+
+    @Transactional
+    public Optional<Pet> update(long id, PetForm form) {
+        return petRepository.findById(id).map(pet -> {
+            pet.setName(form.getName() == null ? null : form.getName().trim());
+            pet.setSpecies(form.getSpecies() == null ? null : form.getSpecies().trim());
+            pet.setAge(form.getAge());
+            String description = (form.getDescription() == null || form.getDescription().isBlank())
+                    ? null
+                    : form.getDescription().trim();
+            pet.setDescription(description);
+            return petRepository.save(pet);
+        });
+    }
+
     @Transactional
     public void deleteById(long id) {
         if (supportRequestRepository.existsByPet_Id(id)) {
@@ -45,5 +73,14 @@ public class PetService {
         }
 
         petRepository.deleteById(id);
+    }
+
+    @Transactional
+    public boolean delete(long id) {
+        if (!petRepository.existsById(id)) {
+            return false;
+        }
+        deleteById(id);
+        return true;
     }
 }
